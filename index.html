@@ -1,675 +1,423 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AURA | Laboratorio di Analisi Mediche</title>
+  <title>AURA | Laboratorio di Diagnostica Avanzata</title>
   
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   
-  <!-- Typography: Italian Aesthetic Fonts -->
+  <!-- Italian High-End Typography: Cormorant Garamond & Space Grotesk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --navy: #132A2F;
-      --cream: #FBF9F5;
-      --cream-dark: #F1ECE1;
-      --gold-accent: #B8965E;
-      --pastel-blue: #A3C6D4;
-      --pastel-blue-light: #F0F6F8;
-      --line: #E2DACD;
+      --bg-dark: #0F1416;
+      --card-dark: #161D20;
+      --card-border: #242E33;
+      --text-[#E6E1D7]: #E6E1D7;
+      --pastel-blue: #92BACE;
+      --pastel-blue-glow: rgba(146, 186, 206, 0.15);
+      --sage: #7B9E87;
     }
     
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: "Plus Jakarta Sans", sans-serif; color: var(--navy); background-color: var(--cream); }
-    .heading-font { font-family: "Playfair Display", serif; }
-    
-    .grain-bg {
-      background-image: radial-gradient(rgba(19, 42, 47, 0.05) 0.7px, transparent 0.7px);
-      background-size: 14px 14px;
+    body { 
+      background-color: var(--bg-dark); 
+      color: #E6E1D7; 
+      font-family: 'Space Grotesk', sans-serif;
     }
 
-    .glass-card {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--line);
+    .font-italian {
+      font-family: 'Cormorant Garamond', serif;
     }
 
-    .service-card {
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Modern Tech Glow & Glassmorphism */
+    .glow-box {
+      box-shadow: 0 0 50px -10px var(--pastel-blue-glow);
     }
-    .service-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(19, 42, 47, 0.08);
+
+    .tech-border {
+      border: 1px solid var(--card-border);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tech-border:hover {
       border-color: var(--pastel-blue);
+      box-shadow: 0 0 25px -5px rgba(146, 186, 206, 0.2);
     }
 
+    /* Modal Animation */
     .modal-shell { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
     .modal-shell.is-open { opacity: 1; pointer-events: auto; }
-    .modal-card { transform: translateY(24px) scale(0.97); transition: transform 0.3s ease; }
-    .modal-shell.is-open .modal-card { transform: translateY(0) scale(1); }
     
-    .step-panel { display: none; }
-    .step-panel.is-active { display: block; animation: rise 0.4s ease-out both; }
-    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-    input, select { outline: none; }
-    input:focus, select:focus { border-color: var(--gold-accent); box-shadow: 0 0 0 3px rgba(184, 150, 94, 0.15); }
+    .tab-btn.active {
+      background-color: var(--pastel-blue);
+      color: #0F1416;
+      font-weight: 600;
+    }
   </style>
  </head>
 
- <body class="w-full min-h-screen antialiased selection:bg-[#A3C6D4] selection:text-[#132A2F]">
+ <body class="w-full min-h-screen antialiased selection:bg-[#92BACE] selection:text-[#0F1416]">
+
+  <!-- Top Live Lab Status Bar (Tech Touch) -->
+  <div class="w-full bg-[#161D20] border-b border-[#242E33] py-2 px-6 text-xs text-[#92BACE] flex flex-wrap justify-between items-center gap-4">
+   <div class="flex items-center gap-3">
+    <span class="flex h-2 w-2 relative">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#92BACE] opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-2 w-2 bg-[#92BACE]"></span>
+    </span>
+    <span class="tracking-wider uppercase font-mono text-[11px]">Lab Operational • Processing Batch #8492</span>
+   </div>
+   <div class="flex items-center gap-6 font-mono text-[11px] text-gray-400">
+    <span>Avg. Turnaround: <strong class="text-[#E6E1D7]">4.2 Hours</strong></span>
+    <span class="hidden sm:inline">ISO 15189 Verified</span>
+   </div>
+  </div>
 
   <!-- Header / Navigation -->
-  <header class="w-full border-b border-[#E2DACD] bg-[#FBF9F5]/90 sticky top-0 z-30 backdrop-blur-md">
-   <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-    <a href="#home" class="flex items-center gap-3 group">
-     <span class="w-10 h-10 rounded-full bg-[#132A2F] text-[#FBF9F5] flex items-center justify-center transition-transform group-hover:scale-105">
-      <i data-lucide="dna" class="w-5 h-5 text-[#A3C6D4]"></i>
-     </span>
+  <header class="w-full border-b border-[#242E33] bg-[#0F1416]/90 sticky top-0 z-40 backdrop-blur-md">
+   <nav class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3 group">
+     <div class="w-10 h-10 rounded-xl bg-[#92BACE]/10 border border-[#92BACE]/30 flex items-center justify-center text-[#92BACE] group-hover:bg-[#92BACE] group-hover:text-[#0F1416] transition-all">
+      <i data-lucide="atom" class="w-5 h-5"></i>
+     </div>
      <div class="flex flex-col">
-      <span class="heading-font font-bold text-xl tracking-wide text-[#132A2F]">AURA</span>
-      <span class="text-[9px] tracking-[0.2em] uppercase text-[#B8965E] font-medium">Laboratorio Medico</span>
+      <span class="font-italian font-bold text-2xl tracking-wider text-[#E6E1D7]">AURA</span>
+      <span class="text-[9px] tracking-[0.25em] uppercase text-[#92BACE]">Biomedical Diagnostics</span>
      </div>
     </a>
     
-    <div class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide">
-     <a class="hover:text-[#B8965E] transition-colors" href="#about">About Us</a>
-     <a class="hover:text-[#B8965E] transition-colors" href="#services">Diagnostics</a>
-     <a class="hover:text-[#B8965E] transition-colors" href="#packages">Check-ups</a>
-     <a class="hover:text-[#B8965E] transition-colors" href="#team">Specialists</a>
+    <div class="hidden md:flex items-center gap-8 text-xs uppercase tracking-widest font-medium text-gray-400">
+     <a class="hover:text-[#92BACE] transition-colors" href="#tech">Technology</a>
+     <a class="hover:text-[#92BACE] transition-colors" href="#selector">Interactive Diagnostics</a>
+     <a class="hover:text-[#92BACE] transition-colors" href="#portal">Patient Portal</a>
     </div>
 
-    <button type="button" data-booking-open class="bg-[#132A2F] text-white rounded-full px-6 py-3 font-semibold text-sm shadow-sm hover:bg-[#B8965E] transition-all duration-300">
+    <button type="button" data-modal-open class="bg-[#92BACE] text-[#0F1416] rounded-xl px-6 py-3 font-semibold text-xs tracking-wider uppercase hover:bg-white transition-all duration-300">
      Book Analysis
     </button>
    </nav>
   </header>
 
-  <main id="home">
-   <!-- Hero Section -->
-   <section class="grain-bg w-full overflow-hidden bg-[#FBF9F5] border-b border-[#E2DACD]">
-    <div class="max-w-7xl mx-auto px-6 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
-     <div>
-      <div class="inline-flex items-center gap-2 rounded-full border border-[#B8965E]/40 bg-[#F1ECE1] px-4 py-1.5 text-xs font-semibold tracking-wider text-[#B8965E] uppercase mb-6">
-       <span class="w-2 h-2 rounded-full bg-[#A3C6D4]"></span> Excellence in Diagnostics
+  <main>
+   <!-- Hero Section: High-Tech Biotech Aesthetic -->
+   <section class="w-full min-h-[85vh] flex items-center border-b border-[#242E33] relative overflow-hidden py-16">
+    <!-- Subtle Grid Background -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#242E3315_1px,transparent_1px),linear-gradient(to_bottom,#242E3315_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+
+    <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center relative z-10">
+     <div class="lg:col-span-7">
+      <div class="inline-flex items-center gap-2 rounded-full border border-[#92BACE]/30 bg-[#92BACE]/5 px-4 py-1.5 text-xs font-mono text-[#92BACE] uppercase mb-8">
+       <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Next-Gen Medical Laboratory
       </div>
       
-      <h1 class="heading-font text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] text-[#132A2F]">
-       Precision health insights, <br><span class="italic font-normal text-[#B8965E]">refined by science.</span>
+      <h1 class="font-italian text-5xl sm:text-6xl lg:text-7xl font-light leading-[1.05] text-[#E6E1D7]">
+       Precision Molecular <br>
+       <span class="italic font-normal text-[#92BACE]">Diagnostics & Intelligence</span>
       </h1>
       
-      <p class="mt-6 max-w-lg text-base leading-relaxed text-gray-700 font-normal">
-       AURA combines Italian medical rigor with cutting-edge biotechnology. Fast, confidential, and highly accurate clinical diagnostics tailored for your wellbeing.
+      <p class="mt-6 max-w-xl text-base leading-relaxed text-gray-400 font-light">
+       Bridging Italian scientific tradition with high-throughput genomic and biochemical analysis. Rapid, automated, and hyper-accurate testing tailored for modern healthcare.
       </p>
       
-      <div class="mt-8 flex flex-wrap gap-4">
-       <button type="button" data-booking-open class="bg-[#132A2F] text-white rounded-full px-7 py-4 font-semibold text-sm inline-flex items-center gap-3 shadow-lg hover:bg-[#B8965E] transition-all duration-300">
-        <i data-lucide="calendar" class="w-4 h-4 text-[#A3C6D4]"></i> Schedule a Test
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+       <button type="button" data-modal-open class="bg-[#92BACE] text-[#0F1416] rounded-xl px-8 py-4 font-bold text-xs uppercase tracking-wider hover:bg-white transition-all shadow-lg shadow-[#92BACE]/10">
+        Reserve Test Slot
        </button>
        
-       <a href="#services" class="rounded-full border border-[#132A2F] px-7 py-4 font-semibold text-sm inline-flex items-center gap-2 hover:bg-[#132A2F] hover:text-white transition-all duration-300">
-        Explore Services <i data-lucide="arrow-right" class="w-4 h-4"></i>
+       <a href="#selector" class="rounded-xl border border-[#242E33] bg-[#161D20] px-8 py-4 font-semibold text-xs uppercase tracking-wider text-[#E6E1D7] hover:border-[#92BACE] transition-all">
+        Explore Services
        </a>
       </div>
-
-      <!-- Trust Badges -->
-      <div class="mt-12 pt-8 border-t border-[#E2DACD] flex items-center gap-8">
-       <div>
-        <p class="heading-font text-2xl font-bold text-[#132A2F]">99.8%</p>
-        <p class="text-xs text-gray-600 tracking-wide mt-0.5">Analytical Accuracy</p>
-       </div>
-       <div class="h-8 w-px bg-[#E2DACD]"></div>
-       <div>
-        <p class="heading-font text-2xl font-bold text-[#132A2F]">Same-Day</p>
-        <p class="text-xs text-gray-600 tracking-wide mt-0.5">Digital Results</p>
-       </div>
-       <div class="h-8 w-px bg-[#E2DACD]"></div>
-       <div>
-        <p class="heading-font text-2xl font-bold text-[#132A2F]">ISO 15189</p>
-        <p class="text-xs text-gray-600 tracking-wide mt-0.5">Certified Lab</p>
-       </div>
-      </div>
      </div>
 
-     <!-- Hero Visual -->
-     <div class="relative">
-      <div class="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white bg-[#F1ECE1]">
-       <!-- 🖼️ Main Lab Hero Image Placeholder -->
-       <img src="images/hero-lab.jpg" alt="AURA Medical Laboratory" class="w-full h-[480px] object-cover">
-       
-       <!-- Floating Card 1 -->
-       <div class="absolute top-6 right-6 glass-card p-4 rounded-2xl max-w-xs shadow-lg flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[#A3C6D4]/30 text-[#132A2F] flex items-center justify-center shrink-0">
-         <i data-lucide="shield-check" class="w-5 h-5 text-[#132A2F]"></i>
+     <!-- Right Column: Interactive Sample Preview Card -->
+     <div class="lg:col-span-5">
+      <div class="bg-[#161D20] rounded-3xl p-8 border border-[#242E33] glow-box relative">
+       <div class="flex items-center justify-between border-b border-[#242E33] pb-4 mb-6">
+        <div class="flex items-center gap-3">
+         <div class="w-3 h-3 rounded-full bg-[#7B9E87]"></div>
+         <span class="font-mono text-xs uppercase text-gray-300">Live Telemetry Report</span>
         </div>
-        <div>
-         <p class="text-xs font-bold text-[#132A2F]">100% Confidential</p>
-         <p class="text-[11px] text-gray-600">Encrypted portal delivery</p>
-        </div>
+        <span class="font-mono text-[10px] text-[#92BACE] border border-[#92BACE]/30 px-2 py-0.5 rounded">Real-Time</span>
        </div>
 
-       <!-- Floating Card 2 -->
-       <div class="absolute bottom-6 left-6 right-6 glass-card p-5 rounded-2xl shadow-xl flex items-center justify-between">
-        <div class="flex items-center gap-3">
-         <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
-         <div>
-          <p class="text-xs font-bold text-[#132A2F]">Home Blood Sampling</p>
-          <p class="text-[11px] text-gray-600">Available across the city</p>
+       <!-- Mock Data Display -->
+       <div class="space-y-4">
+        <div class="bg-[#0F1416] p-4 rounded-2xl border border-[#242E33]">
+         <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Target Assay</span>
+          <span class="text-[#92BACE] font-mono">GEN-9942</span>
+         </div>
+         <div class="font-bold text-base text-[#E6E1D7]">Complete Hormone & Lipid Map</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 font-mono text-xs">
+         <div class="bg-[#0F1416] p-4 rounded-2xl border border-[#242E33]">
+          <span class="text-gray-500 block text-[10px] uppercase">Processing Time</span>
+          <span class="text-[#E6E1D7] font-bold text-sm mt-1 block">3.5 Hours</span>
+         </div>
+         <div class="bg-[#0F1416] p-4 rounded-2xl border border-[#242E33]">
+          <span class="text-gray-500 block text-[10px] uppercase">Accuracy Index</span>
+          <span class="text-[#7B9E87] font-bold text-sm mt-1 block">99.98%</span>
          </div>
         </div>
-        <span class="text-xs font-semibold px-3 py-1 bg-[#A3C6D4]/40 text-[#132A2F] rounded-full">Active</span>
+
+        <div class="pt-4 flex items-center justify-between text-xs text-gray-400">
+         <span class="flex items-center gap-2"><i data-lucide="lock" class="w-3.5 h-3.5 text-[#92BACE]"></i> Fully Encrypted Results</span>
+         <span class="text-[#92BACE] font-mono">ISO 15189</span>
+        </div>
        </div>
       </div>
      </div>
     </div>
    </section>
 
-   <!-- Quick Services Banner -->
-   <section class="w-full bg-[#132A2F] text-white py-12">
-    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-     <div class="flex items-start gap-4">
-      <div class="p-3 rounded-xl bg-white/10 text-[#A3C6D4]"><i data-lucide="microscope" class="w-6 h-6"></i></div>
-      <div>
-       <h4 class="font-bold text-base text-[#FBF9F5]">Advanced Microscopy</h4>
-       <p class="text-xs text-[#E2DACD] mt-1 leading-relaxed">State-of-the-art cellular & tissue diagnostics.</p>
-      </div>
-     </div>
-
-     <div class="flex items-start gap-4">
-      <div class="p-3 rounded-xl bg-white/10 text-[#A3C6D4]"><i data-lucide="activity" class="w-6 h-6"></i></div>
-      <div>
-       <h4 class="font-bold text-base text-[#FBF9F5]">Biomedical Chemistry</h4>
-       <p class="text-xs text-[#E2DACD] mt-1 leading-relaxed">Full metabolic, hormonal, and lipid profiling.</p>
-      </div>
-     </div>
-
-     <div class="flex items-start gap-4">
-      <div class="p-3 rounded-xl bg-white/10 text-[#A3C6D4]"><i data-lucide="file-spreadsheet" class="w-6 h-6"></i></div>
-      <div>
-       <h4 class="font-bold text-base text-[#FBF9F5]">Fast Digital Reports</h4>
-       <p class="text-xs text-[#E2DACD] mt-1 leading-relaxed">Access secure test PDF results online within 12 hours.</p>
-      </div>
-     </div>
-
-     <div class="flex items-start gap-4">
-      <div class="p-3 rounded-xl bg-white/10 text-[#A3C6D4]"><i data-lucide="home" class="w-6 h-6"></i></div>
-      <div>
-       <h4 class="font-bold text-base text-[#FBF9F5]">Home Collection</h4>
-       <p class="text-xs text-[#E2DACD] mt-1 leading-relaxed">Certified phlebotomists dispatched to your home.</p>
-      </div>
-     </div>
-    </div>
-   </section>
-
-   <!-- Diagnostic Categories Section -->
-   <section id="services" class="w-full bg-[#FBF9F5] py-20 lg:py-28">
+   <!-- Feature 2: Interactive Service Matrix (New Concept) -->
+   <section id="selector" class="w-full py-24 border-b border-[#242E33]">
     <div class="max-w-7xl mx-auto px-6">
-     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
-      <div>
-       <p class="text-xs font-bold tracking-widest text-[#B8965E] uppercase">Diagnostic Specialties</p>
-       <h2 class="heading-font text-3xl sm:text-4xl font-bold mt-3 text-[#132A2F]">Comprehensive Clinical Analyses</h2>
-      </div>
-      <p class="max-w-md text-sm leading-relaxed text-gray-600">
-       Our laboratory is structured into specialized departments to ensure absolute precision for every specimen.
-      </p>
+     <div class="max-w-2xl mb-16">
+      <span class="text-xs font-mono text-[#92BACE] uppercase tracking-widest">Diagnostic Categories</span>
+      <h2 class="font-italian text-4xl sm:text-5xl font-light text-[#E6E1D7] mt-2">Interactive Analysis Selector</h2>
+      <p class="text-gray-400 text-sm mt-4 font-light">Select a specialty below to view specific diagnostic parameters and requirements.</p>
      </div>
-     
-     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Card 1 -->
-      <article class="service-card rounded-3xl p-8 bg-white border border-[#E2DACD] flex flex-col justify-between">
-       <div>
-        <div class="w-12 h-12 rounded-2xl bg-[#F0F6F8] text-[#132A2F] flex items-center justify-center mb-6">
-         <i data-lucide="droplet" class="w-6 h-6 text-[#A3C6D4]"></i>
-        </div>
-        <h3 class="heading-font font-bold text-xl text-[#132A2F]">Hematology & Blood Art</h3>
-        <p class="text-sm leading-relaxed mt-3 text-gray-600">Complete blood count (CBC), coagulation studies, and blood cell morphology analysis.</p>
-       </div>
-       <div class="mt-8 pt-4 border-t border-[#E2DACD]/60 flex items-center justify-between">
-        <span class="text-xs font-bold text-[#B8965E]">Results in 6 Hours</span>
-        <button data-booking-open class="text-xs font-bold text-[#132A2F] hover:text-[#B8965E]">Book <i data-lucide="chevron-right" class="w-3.5 h-3.5 inline"></i></button>
-       </div>
-      </article>
 
-      <!-- Card 2 -->
-      <article class="service-card rounded-3xl p-8 bg-white border border-[#E2DACD] flex flex-col justify-between">
-       <div>
-        <div class="w-12 h-12 rounded-2xl bg-[#F0F6F8] text-[#132A2F] flex items-center justify-center mb-6">
-         <i data-lucide="dna" class="w-6 h-6 text-[#A3C6D4]"></i>
+     <!-- Interactive Tabs -->
+     <div class="grid lg:grid-cols-12 gap-8 items-start">
+      <!-- Buttons List -->
+      <div class="lg:col-span-4 space-y-3" id="tabButtons">
+       <button onclick="switchTab(0)" class="tab-btn active w-full text-left p-5 rounded-2xl border border-[#242E33] transition-all flex items-center justify-between">
+        <div>
+         <div class="text-xs font-mono uppercase opacity-70">Category 01</div>
+         <div class="font-bold text-base mt-0.5">Biochemistry & Hormones</div>
         </div>
-        <h3 class="heading-font font-bold text-xl text-[#132A2F]">Molecular Genetics & PCR</h3>
-        <p class="text-sm leading-relaxed mt-3 text-gray-600">High-sensitivity DNA/RNA amplification for infectious diseases and genetic markers.</p>
-       </div>
-       <div class="mt-8 pt-4 border-t border-[#E2DACD]/60 flex items-center justify-between">
-        <span class="text-xs font-bold text-[#B8965E]">Results in 24 Hours</span>
-        <button data-booking-open class="text-xs font-bold text-[#132A2F] hover:text-[#B8965E]">Book <i data-lucide="chevron-right" class="w-3.5 h-3.5 inline"></i></button>
-       </div>
-      </article>
+        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+       </button>
 
-      <!-- Card 3 -->
-      <article class="service-card rounded-3xl p-8 bg-white border border-[#E2DACD] flex flex-col justify-between">
-       <div>
-        <div class="w-12 h-12 rounded-2xl bg-[#F0F6F8] text-[#132A2F] flex items-center justify-center mb-6">
-         <i data-lucide="heart-pulse" class="w-6 h-6 text-[#A3C6D4]"></i>
+       <button onclick="switchTab(1)" class="tab-btn w-full text-left p-5 rounded-2xl border border-[#242E33] bg-[#161D20] text-gray-300 hover:border-[#92BACE] transition-all flex items-center justify-between">
+        <div>
+         <div class="text-xs font-mono uppercase text-gray-500">Category 02</div>
+         <div class="font-bold text-base mt-0.5">Genomics & DNA Sequencing</div>
         </div>
-        <h3 class="heading-font font-bold text-xl text-[#132A2F]">Hormonal & Endocrinology</h3>
-        <p class="text-sm leading-relaxed mt-3 text-gray-600">Thyroid screening, fertility panels, cortisol, and comprehensive endocrine mapping.</p>
-       </div>
-       <div class="mt-8 pt-4 border-t border-[#E2DACD]/60 flex items-center justify-between">
-        <span class="text-xs font-bold text-[#B8965E]">Results in 12 Hours</span>
-        <button data-booking-open class="text-xs font-bold text-[#132A2F] hover:text-[#B8965E]">Book <i data-lucide="chevron-right" class="w-3.5 h-3.5 inline"></i></button>
-       </div>
-      </article>
+        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+       </button>
 
-      <!-- Card 4 -->
-      <article class="service-card rounded-3xl p-8 bg-white border border-[#E2DACD] flex flex-col justify-between">
-       <div>
-        <div class="w-12 h-12 rounded-2xl bg-[#F0F6F8] text-[#132A2F] flex items-center justify-center mb-6">
-         <i data-lucide="shield-alert" class="w-6 h-6 text-[#A3C6D4]"></i>
+       <button onclick="switchTab(2)" class="tab-btn w-full text-left p-5 rounded-2xl border border-[#242E33] bg-[#161D20] text-gray-300 hover:border-[#92BACE] transition-all flex items-center justify-between">
+        <div>
+         <div class="text-xs font-mono uppercase text-gray-500">Category 03</div>
+         <div class="font-bold text-base mt-0.5">Immunology & Allergens</div>
         </div>
-        <h3 class="heading-font font-bold text-xl text-[#132A2F]">Immunology & Allergies</h3>
-        <p class="text-sm leading-relaxed mt-3 text-gray-600">Autoimmune screening, food intolerances, and environmental allergen profiling.</p>
-       </div>
-       <div class="mt-8 pt-4 border-t border-[#E2DACD]/60 flex items-center justify-between">
-        <span class="text-xs font-bold text-[#B8965E]">Results in 24 Hours</span>
-        <button data-booking-open class="text-xs font-bold text-[#132A2F] hover:text-[#B8965E]">Book <i data-lucide="chevron-right" class="w-3.5 h-3.5 inline"></i></button>
-       </div>
-      </article>
+        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+       </button>
+      </div>
 
-      <!-- Card 5 -->
-      <article class="service-card rounded-3xl p-8 bg-white border border-[#E2DACD] flex flex-col justify-between">
-       <div>
-        <div class="w-12 h-12 rounded-2xl bg-[#F0F6F8] text-[#132A2F] flex items-center justify-center mb-6">
-         <i data-lucide="flask-conical" class="w-6 h-6 text-[#A3C6D4]"></i>
+      <!-- Tab Content Area -->
+      <div class="lg:col-span-8 bg-[#161D20] rounded-3xl p-8 border border-[#242E33]" id="tabContent">
+       <!-- Content will be swapped by JS -->
+       <div id="tab-0" class="tab-panel">
+        <div class="flex items-center justify-between mb-6">
+         <span class="text-xs font-mono text-[#92BACE] border border-[#92BACE]/30 px-3 py-1 rounded-full">Automated Assay</span>
+         <span class="text-xs text-gray-400 font-mono">Fasting Required: 8 Hours</span>
         </div>
-        <h3 class="heading-font font-bold text-xl text-[#132A2F]">Toxicology & Biochemistry</h3>
-        <p class="text-sm leading-relaxed mt-3 text-gray-600">Heavy metal screening, therapeutic drug monitoring, and metabolic organ function.</p>
-       </div>
-       <div class="mt-8 pt-4 border-t border-[#E2DACD]/60 flex items-center justify-between">
-        <span class="text-xs font-bold text-[#B8965E]">Results in 12 Hours</span>
-        <button data-booking-open class="text-xs font-bold text-[#132A2F] hover:text-[#B8965E]">Book <i data-lucide="chevron-right" class="w-3.5 h-3.5 inline"></i></button>
-       </div>
-      </article>
+        <h3 class="font-italian text-3xl text-[#E6E1D7] font-semibold">Comprehensive Metabolic & Endocrine Profile</h3>
+        <p class="text-gray-400 text-sm mt-3 leading-relaxed">Advanced analysis covering thyroid hormones, lipid fractions, glycated hemoglobin, and liver enzyme pathways using mass spectrometry.</p>
+        
+        <div class="mt-8 grid sm:grid-cols-2 gap-4 border-t border-[#242E33] pt-6">
+         <div class="bg-[#0F1416] p-4 rounded-xl border border-[#242E33]">
+          <span class="text-xs text-gray-500 block">Sample Type</span>
+          <span class="text-sm font-bold text-[#E6E1D7] mt-1 block">Venous Blood (5 ml)</span>
+         </div>
+         <div class="bg-[#0F1416] p-4 rounded-xl border border-[#242E33]">
+          <span class="text-xs text-gray-500 block">Turnaround Time</span>
+          <span class="text-sm font-bold text-[#92BACE] mt-1 block">Same-Day Digital Delivery</span>
+         </div>
+        </div>
 
-      <!-- Card 6 -->
-      <article class="service-card rounded-3xl p-8 bg-white border border-[#E2DACD] flex flex-col justify-between">
-       <div>
-        <div class="w-12 h-12 rounded-2xl bg-[#F0F6F8] text-[#132A2F] flex items-center justify-center mb-6">
-         <i data-lucide="sparkles" class="w-6 h-6 text-[#A3C6D4]"></i>
-        </div>
-        <h3 class="heading-font font-bold text-xl text-[#132A2F]">Microbiology & Cultures</h3>
-        <p class="text-sm leading-relaxed mt-3 text-gray-600">Bacterial identification, fungal analysis, and automated antibiograms.</p>
+        <button data-modal-open class="mt-8 w-full bg-[#92BACE] text-[#0F1416] font-bold py-4 rounded-xl text-xs uppercase tracking-wider hover:bg-white transition-colors">
+         Select This Panel
+        </button>
        </div>
-       <div class="mt-8 pt-4 border-t border-[#E2DACD]/60 flex items-center justify-between">
-        <span class="text-xs font-bold text-[#B8965E]">Results in 48 Hours</span>
-        <button data-booking-open class="text-xs font-bold text-[#132A2F] hover:text-[#B8965E]">Book <i data-lucide="chevron-right" class="w-3.5 h-3.5 inline"></i></button>
-       </div>
-      </article>
+      </div>
      </div>
     </div>
    </section>
 
-   <!-- Tailored Health Check-Up Packages -->
-   <section id="packages" class="w-full bg-[#F1ECE1] py-20 lg:py-28 border-y border-[#E2DACD]">
+   <!-- Feature 3: Technology Showcase -->
+   <section id="tech" class="w-full py-24 bg-[#161D20] border-b border-[#242E33]">
     <div class="max-w-7xl mx-auto px-6">
-     <div class="text-center max-w-2xl mx-auto mb-16">
-      <p class="text-xs font-bold tracking-widest text-[#B8965E] uppercase">Tailored Prevention</p>
-      <h2 class="heading-font text-3xl sm:text-4xl font-bold mt-3 text-[#132A2F]">Exclusive Health Profiles</h2>
-      <p class="mt-4 text-sm leading-relaxed text-gray-600">Curated test bundles designed by specialists for preventative wellbeing and detailed evaluation.</p>
-     </div>
-
      <div class="grid lg:grid-cols-3 gap-8">
-      <!-- Package 1 -->
-      <div class="bg-white rounded-[2rem] p-8 border border-[#E2DACD] flex flex-col justify-between shadow-sm hover:shadow-xl transition-shadow">
-       <div>
-        <div class="flex items-center justify-between">
-         <span class="text-xs font-semibold uppercase tracking-wider text-[#A3C6D4] bg-[#F0F6F8] px-3 py-1 rounded-full">Essential</span>
-         <span class="heading-font text-2xl font-bold text-[#132A2F]">€120</span>
-        </div>
-        <h3 class="heading-font font-bold text-2xl mt-4 text-[#132A2F]">Standard Prevention</h3>
-        <p class="text-xs text-gray-500 mt-1">Recommended annually for general check-ups</p>
-        
-        <ul class="mt-8 space-y-3.5 text-sm text-gray-700">
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#B8965E]"></i> Full Blood Count & ESR</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#B8965E]"></i> Kidney & Liver Profile</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#B8965E]"></i> Lipid Panel & Fasting Glucose</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#B8965E]"></i> Urine Dipstick Analysis</li>
-        </ul>
+      <div class="tech-border bg-[#0F1416] p-8 rounded-3xl">
+       <div class="w-12 h-12 rounded-2xl bg-[#92BACE]/10 text-[#92BACE] flex items-center justify-center mb-6">
+        <i data-lucide="cpu" class="w-6 h-6"></i>
        </div>
-
-       <button type="button" data-booking-open class="mt-8 w-full border border-[#132A2F] text-[#132A2F] rounded-full py-3.5 font-bold text-sm hover:bg-[#132A2F] hover:text-white transition-colors">
-        Book Package
-       </button>
+       <h3 class="font-italian text-2xl font-bold text-[#E6E1D7]">AI-Assisted Cytology</h3>
+       <p class="text-gray-400 text-xs leading-relaxed mt-3">Algorithmic microscopic pattern recognition reducing false negative margins down to 0.02%.</p>
       </div>
 
-      <!-- Package 2 (Highlighted) -->
-      <div class="bg-[#132A2F] text-white rounded-[2rem] p-8 border border-[#132A2F] flex flex-col justify-between shadow-2xl relative transform lg:-translate-y-3">
-       <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#B8965E] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full">Most Popular</span>
-       <div>
-        <div class="flex items-center justify-between">
-         <span class="text-xs font-semibold uppercase tracking-wider text-[#A3C6D4] bg-white/10 px-3 py-1 rounded-full">Complete</span>
-         <span class="heading-font text-3xl font-bold text-[#A3C6D4]">€280</span>
-        </div>
-        <h3 class="heading-font font-bold text-2xl mt-4 text-white">Executive Wellness Profile</h3>
-        <p class="text-xs text-[#E2DACD] mt-1">In-depth metabolic & cardiovascular assessment</p>
-        
-        <ul class="mt-8 space-y-3.5 text-sm text-[#E2DACD]">
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#A3C6D4]"></i> All Essential Package Tests</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#A3C6D4]"></i> Full Thyroid Panel (TSH, FT3, FT4)</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#A3C6D4]"></i> Vitamin D, B12 & Iron Markers</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#A3C6D4]"></i> Cardiac Risk Biomarkers (hs-CRP)</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#A3C6D4]"></i> Doctor Consultation Included</li>
-        </ul>
+      <div class="tech-border bg-[#0F1416] p-8 rounded-3xl">
+       <div class="w-12 h-12 rounded-2xl bg-[#92BACE]/10 text-[#92BACE] flex items-center justify-center mb-6">
+        <i data-lucide="fingerprint" class="w-6 h-6"></i>
        </div>
-
-       <button type="button" data-booking-open class="mt-8 w-full bg-[#A3C6D4] text-[#132A2F] rounded-full py-3.5 font-bold text-sm hover:bg-[#B8965E] hover:text-white transition-all">
-        Book Executive Profile
-       </button>
+       <h3 class="font-italian text-2xl font-bold text-[#E6E1D7]">Encrypted Patient Portal</h3>
+       <p class="text-gray-400 text-xs leading-relaxed mt-3">Blockchain-anchored diagnostic records giving patients complete sovereign control of their data.</p>
       </div>
 
-      <!-- Package 3 -->
-      <div class="bg-white rounded-[2rem] p-8 border border-[#E2DACD] flex flex-col justify-between shadow-sm hover:shadow-xl transition-shadow">
-       <div>
-        <div class="flex items-center justify-between">
-         <span class="text-xs font-semibold uppercase tracking-wider text-[#A3C6D4] bg-[#F0F6F8] px-3 py-1 rounded-full">Advanced</span>
-         <span class="heading-font text-2xl font-bold text-[#132A2F]">€410</span>
-        </div>
-        <h3 class="heading-font font-bold text-2xl mt-4 text-[#132A2F]">Hormonal & Longevity</h3>
-        <p class="text-xs text-gray-500 mt-1">Targeted profile for vitality and endocrine balance</p>
-        
-        <ul class="mt-8 space-y-3.5 text-sm text-gray-700">
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#B8965E]"></i> Complete Endocrine & Sex Hormones</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#B8965E]"></i> Cortisol & Stress Profile</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#B8965E]"></i> Advanced Tumor Markers Screening</li>
-         <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-[#B8965E]"></i> Antioxidant & Oxidative Stress Index</li>
-        </ul>
+      <div class="tech-border bg-[#0F1416] p-8 rounded-3xl">
+       <div class="w-12 h-12 rounded-2xl bg-[#92BACE]/10 text-[#92BACE] flex items-center justify-center mb-6">
+        <i data-lucide="activity" class="w-6 h-6"></i>
        </div>
-
-       <button type="button" data-booking-open class="mt-8 w-full border border-[#132A2F] text-[#132A2F] rounded-full py-3.5 font-bold text-sm hover:bg-[#132A2F] hover:text-white transition-colors">
-        Book Package
-       </button>
+       <h3 class="font-italian text-2xl font-bold text-[#E6E1D7]">Robotic Pipetting</h3>
+       <p class="text-gray-400 text-xs leading-relaxed mt-3">Fully automated fluid robotics eliminating manual handling contamination risks entirely.</p>
       </div>
      </div>
     </div>
    </section>
 
-   <!-- Medical Specialists Section -->
-   <section id="team" class="w-full bg-[#FBF9F5] py-20 lg:py-28">
-    <div class="max-w-7xl mx-auto px-6">
-     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
-      <div>
-       <p class="text-xs font-bold tracking-widest text-[#B8965E] uppercase">Scientific Board</p>
-       <h2 class="heading-font text-3xl sm:text-4xl font-bold mt-3 text-[#132A2F]">Biomedical Specialists</h2>
-      </div>
-      <p class="max-w-md text-sm leading-relaxed text-gray-600">
-       Led by renowned Italian biologists and pathologists dedicated to analytical precision and research.
-      </p>
-     </div>
-     
-     <div class="grid md:grid-cols-2 gap-8">
-      <!-- Specialist 1 -->
-      <article class="bg-white rounded-[2.5rem] overflow-hidden border border-[#E2DACD] grid sm:grid-cols-2 shadow-sm">
-       <!-- 🖼️ Doctor/Biologist Image Placeholder -->
-       <img src="images/doctor-1.jpg" alt="Dr. Matteo Rossi" class="w-full h-64 sm:h-full object-cover bg-[#F1ECE1]">
-       <div class="p-8 flex flex-col justify-between">
-        <div>
-         <p class="text-xs font-bold text-[#B8965E] uppercase tracking-wider">Laboratory Director</p>
-         <h3 class="heading-font font-bold text-xl text-[#132A2F] mt-1">Dr. Matteo Rossi</h3>
-         <p class="text-xs text-gray-500 mt-0.5">Ph.D. in Molecular Biology</p>
-         <p class="text-xs leading-relaxed mt-4 text-gray-600">Former senior researcher in Milan, specializing in genomic sequencing and hematological diagnostics.</p>
-        </div>
-        <div class="mt-6 pt-4 border-t border-[#E2DACD] flex items-center gap-2 text-xs text-[#132A2F] font-semibold">
-         <i data-lucide="award" class="w-4 h-4 text-[#A3C6D4]"></i> 18+ Years Experience
-        </div>
-       </div>
-      </article>
-
-      <!-- Specialist 2 -->
-      <article class="bg-white rounded-[2.5rem] overflow-hidden border border-[#E2DACD] grid sm:grid-cols-2 shadow-sm">
-       <!-- 🖼️ Doctor/Biologist Image Placeholder -->
-       <img src="images/doctor-2.jpg" alt="Dr. Elena Moretti" class="w-full h-64 sm:h-full object-cover bg-[#F1ECE1]">
-       <div class="p-8 flex flex-col justify-between">
-        <div>
-         <p class="text-xs font-bold text-[#B8965E] uppercase tracking-wider">Head of Biochemistry</p>
-         <h3 class="heading-font font-bold text-xl text-[#132A2F] mt-1">Dr. Elena Moretti</h3>
-         <p class="text-xs text-gray-500 mt-0.5">Clinical Immunologist</p>
-         <p class="text-xs leading-relaxed mt-4 text-gray-600">Expert in endocrinological profiling and autoimmune biomarkers with extensive European publications.</p>
-        </div>
-        <div class="mt-6 pt-4 border-t border-[#E2DACD] flex items-center gap-2 text-xs text-[#132A2F] font-semibold">
-         <i data-lucide="award" class="w-4 h-4 text-[#A3C6D4]"></i> 14+ Years Experience
-        </div>
-       </div>
-      </article>
-     </div>
-    </div>
-   </section>
-
-   <!-- Call to Action Section -->
-   <section class="w-full bg-[#132A2F] py-20 text-white relative overflow-hidden">
-    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
-     <div class="w-12 h-12 rounded-full bg-white/10 text-[#A3C6D4] flex items-center justify-center mx-auto mb-6">
-      <i data-lucide="calendar-heart" class="w-6 h-6"></i>
-     </div>
-     <h2 class="heading-font text-3xl sm:text-4xl font-bold">Your Health Diagnostics, Seamlessly Arranged</h2>
-     <p class="text-[#E2DACD] text-sm mt-4 max-w-xl mx-auto leading-relaxed">
-      Book your appointment online or request home sampling. Rapid, accurate, and completely confidential.
+   <!-- Patient Portal Teaser -->
+   <section id="portal" class="w-full py-24">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+     <span class="text-xs font-mono text-[#92BACE] uppercase tracking-widest">Seamless Experience</span>
+     <h2 class="font-italian text-4xl sm:text-5xl text-[#E6E1D7] mt-3">Track Your Sample In Real-Time</h2>
+     <p class="text-gray-400 text-sm mt-4 max-w-xl mx-auto font-light">
+      Input your sample ID to check execution status, lab technician assignment, and download signed PDF reports.
      </p>
-     <button type="button" data-booking-open class="mt-8 bg-[#A3C6D4] text-[#132A2F] rounded-full px-9 py-4 font-bold text-sm shadow-xl hover:bg-[#B8965E] hover:text-white transition-all">
-      Book Your Test Online
-     </button>
+
+     <div class="mt-10 max-w-md mx-auto flex gap-3">
+      <input type="text" placeholder="Enter Reference Code (e.g. AUR-992)" class="bg-[#161D20] border border-[#242E33] text-sm rounded-xl px-5 py-4 w-full text-[#E6E1D7] focus:border-[#92BACE]">
+      <button type="button" class="bg-[#92BACE] text-[#0F1416] font-bold px-6 py-4 rounded-xl text-xs uppercase tracking-wider hover:bg-white transition-all shrink-0">Track</button>
+     </div>
     </div>
    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="w-full bg-[#0D1D21] text-[#E2DACD] border-t border-white/10">
-   <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col sm:flex-row justify-between items-center gap-6 text-xs">
-    <div class="flex items-center gap-3">
-     <span class="heading-font font-bold text-lg text-white tracking-widest">AURA</span>
-     <span class="text-gray-500">|</span>
-     <span>© 2026 Laboratorio di Analisi Mediche. All rights reserved.</span>
+  <!-- High-End Dark Footer -->
+  <footer class="w-full bg-[#0A0D0E] border-t border-[#242E33] py-12 text-gray-500 text-xs font-mono">
+   <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-6">
+    <div class="flex items-center gap-4">
+     <span class="font-italian text-xl text-[#E6E1D7] font-bold">AURA</span>
+     <span>• Milano, Via Montenapoleone 12</span>
     </div>
-    <div class="flex items-center gap-6 text-gray-400">
-     <span>Via Monte Napoleone 12, Milano</span>
-     <span>Mon - Sat: 07:00 - 19:00</span>
-    </div>
+    <p>© 2026 AURA Diagnostic Technologies S.p.A.</p>
    </div>
   </footer>
 
-  <!-- Booking Modal (Multi-step Appointment System) -->
-  <div id="bookingModal" class="modal-shell fixed inset-0 z-50 bg-[#0D1D21]/80 p-4 flex items-center justify-center backdrop-blur-sm" role="dialog" aria-modal="true">
-   <div class="modal-card w-full max-w-lg rounded-[2.5rem] bg-[#FBF9F5] shadow-2xl overflow-hidden border border-[#E2DACD]">
+  <!-- Booking Modal -->
+  <div id="bookingModal" class="modal-shell fixed inset-0 z-50 bg-black/80 p-4 flex items-center justify-center backdrop-blur-md">
+   <div class="w-full max-w-md rounded-3xl bg-[#161D20] border border-[#242E33] p-8 relative">
+    <button id="modalClose" type="button" class="absolute top-6 right-6 text-gray-400 hover:text-white">✕</button>
     
-    <!-- Modal Header -->
-    <div class="p-6 border-b border-[#E2DACD] flex items-start justify-between bg-[#F1ECE1]">
+    <span class="text-xs font-mono text-[#92BACE] uppercase">Online Reservation</span>
+    <h3 class="font-italian text-2xl font-bold text-[#E6E1D7] mt-1">Book Diagnostic Test</h3>
+    
+    <form class="mt-6 space-y-4 text-xs">
      <div>
-      <p class="text-xs font-bold text-[#B8965E] uppercase tracking-wider">AURA Diagnostics</p>
-      <h2 id="booking-title" class="heading-font font-bold text-xl text-[#132A2F] mt-0.5">Schedule Analysis</h2>
+      <label class="block text-gray-400 uppercase font-mono mb-1">Full Name</label>
+      <input type="text" required placeholder="e.g. Dr. Gianluca Rossi" class="w-full bg-[#0F1416] border border-[#242E33] rounded-xl px-4 py-3 text-[#E6E1D7] focus:border-[#92BACE]">
      </div>
-     <button id="bookingClose" type="button" class="w-9 h-9 rounded-full border border-[#E2DACD] bg-white flex items-center justify-center text-[#132A2F] hover:bg-[#132A2F] hover:text-white transition-colors">✕</button>
-    </div>
-    
-    <!-- Step Indicator -->
-    <div class="px-8 pt-6 flex items-center gap-3">
-     <span class="step-dot is-current w-7 h-7 rounded-full border border-[#132A2F] flex items-center justify-center text-xs font-bold">1</span> 
-     <span class="h-px flex-1 bg-[#E2DACD]"></span> 
-     <span class="step-dot w-7 h-7 rounded-full border border-[#E2DACD] flex items-center justify-center text-xs font-bold text-gray-500">2</span> 
-     <span class="h-px flex-1 bg-[#E2DACD]"></span> 
-     <span class="step-dot w-7 h-7 rounded-full border border-[#E2DACD] flex items-center justify-center text-xs font-bold text-gray-500">3</span>
-    </div>
 
-    <!-- Booking Form -->
-    <form id="bookingForm" class="p-8">
-     <!-- STEP 1: Select Analysis -->
-     <section class="step-panel is-active" data-step="1">
-      <h3 class="font-bold text-[#132A2F] text-base">Select Test or Check-up Package</h3>
-      
-      <label class="block text-xs font-bold uppercase tracking-wider mt-5 mb-2 text-gray-600" for="serviceSelect">Service Category</label> 
-      <select id="serviceSelect" required class="w-full bg-white border border-[#E2DACD] rounded-xl px-4 py-3 text-sm text-[#132A2F]"> 
-       <option value="Executive Package">Executive Wellness Profile (€280)</option> 
-       <option value="Essential Package">Standard Prevention Package (€120)</option> 
-       <option value="Blood Test">Routine Blood Analysis & Hematology</option> 
-       <option value="Genetics">Genetics & PCR Diagnostics</option> 
-       <option value="Hormone Panel">Comprehensive Endocrine Profile</option>
-       <option value="Home Sampling">Request Home Phlebotomy Visit</option> 
+     <div>
+      <label class="block text-gray-400 uppercase font-mono mb-1">Selected Specialty</label>
+      <select class="w-full bg-[#0F1416] border border-[#242E33] rounded-xl px-4 py-3 text-[#E6E1D7] focus:border-[#92BACE]">
+       <option>Biochemistry & Hormones</option>
+       <option>Genomics & DNA Sequencing</option>
+       <option>Immunology & Allergens</option>
       </select>
+     </div>
 
-      <p class="mt-4 text-xs rounded-xl bg-[#F0F6F8] p-4 text-[#132A2F] leading-relaxed">
-       <i data-lucide="info" class="w-4 h-4 inline text-[#A3C6D4] mr-1"></i> Fasting for 8–12 hours prior to blood collection is recommended for optimal accuracy.
-      </p>
+     <div>
+      <label class="block text-gray-400 uppercase font-mono mb-1">Preferred Date</label>
+      <input type="date" required class="w-full bg-[#0F1416] border border-[#242E33] rounded-xl px-4 py-3 text-[#E6E1D7] focus:border-[#92BACE]">
+     </div>
 
-      <button type="button" data-next class="mt-6 w-full bg-[#132A2F] text-white rounded-xl py-3.5 font-bold text-sm hover:bg-[#B8965E] transition-colors">Next: Patient Details</button>
-     </section>
-
-     <!-- STEP 2: Patient Info & Schedule -->
-     <section class="step-panel" data-step="2">
-      <h3 class="font-bold text-[#132A2F] text-base">Patient Details & Date</h3>
-      
-      <label class="block text-xs font-bold uppercase tracking-wider mt-4 mb-1.5 text-gray-600" for="patientName">Full Name</label> 
-      <input id="patientName" required type="text" placeholder="e.g. Marco Rossi" class="w-full bg-white border border-[#E2DACD] rounded-xl px-4 py-3 text-sm"> 
-      
-      <label class="block text-xs font-bold uppercase tracking-wider mt-3 mb-1.5 text-gray-600" for="patientPhone">Phone Number</label> 
-      <input id="patientPhone" required type="tel" placeholder="+39 300 000 0000" class="w-full bg-white border border-[#E2DACD] rounded-xl px-4 py-3 text-sm">
-      
-      <div class="grid grid-cols-2 gap-4 mt-3">
-       <div>
-        <label class="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600" for="appointmentDate">Preferred Date</label> 
-        <input id="appointmentDate" required type="date" class="w-full bg-white border border-[#E2DACD] rounded-xl px-3 py-3 text-sm">
-       </div>
-       <div>
-        <label class="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600" for="appointmentTime">Time Slot</label> 
-        <select id="appointmentTime" required class="w-full bg-white border border-[#E2DACD] rounded-xl px-3 py-3 text-sm"> 
-         <option value="07:30">07:30 AM</option> 
-         <option value="09:00">09:00 AM</option> 
-         <option value="11:00">11:00 AM</option> 
-         <option value="15:00">03:00 PM</option> 
-        </select>
-       </div>
-      </div>
-
-      <div class="mt-6 grid grid-cols-2 gap-3">
-       <button type="button" data-back class="border border-[#132A2F] text-[#132A2F] rounded-xl py-3 font-bold text-sm">Back</button> 
-       <button type="button" data-next class="bg-[#132A2F] text-white rounded-xl py-3 font-bold text-sm">Review</button>
-      </div>
-     </section>
-
-     <!-- STEP 3: Review & Submit -->
-     <section class="step-panel" data-step="3">
-      <div class="w-10 h-10 rounded-full bg-[#F0F6F8] text-[#132A2F] flex items-center justify-center">
-       <i data-lucide="shield-check" class="w-5 h-5 text-[#A3C6D4]"></i>
-      </div>
-      <h3 class="font-bold text-[#132A2F] text-base mt-4">Confirm Your Booking</h3>
-      <p class="mt-2 text-xs text-gray-600 leading-relaxed">By confirming, your appointment slot will be reserved. You will receive an SMS and email with fasting guidelines.</p>
-      
-      <div class="mt-6 grid grid-cols-2 gap-3">
-       <button type="button" data-back class="border border-[#132A2F] text-[#132A2F] rounded-xl py-3 font-bold text-sm">Back</button> 
-       <button type="submit" class="bg-[#B8965E] text-white rounded-xl py-3 font-bold text-sm hover:bg-[#132A2F] transition-colors">Confirm & Reserve</button>
-      </div>
-     </section>
-
-     <!-- SUCCESS SCREEN -->
-     <section id="bookingSuccess" class="hidden text-center py-6">
-      <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-4">
-       <i data-lucide="check" class="w-6 h-6"></i>
-      </div>
-      <h3 class="heading-font font-bold text-xl text-[#132A2F]">Appointment Confirmed!</h3>
-      <p class="text-xs text-gray-600 mt-2 leading-relaxed">Thank you for choosing AURA. Your reference code is <span class="font-bold text-[#132A2F]">#AUR-2026-X</span>.</p>
-      <button type="button" id="successClose" class="bg-[#132A2F] text-white mt-6 rounded-xl px-8 py-3 font-bold text-sm">Done</button>
-     </section>
+     <button type="submit" class="w-full bg-[#92BACE] text-[#0F1416] font-bold py-4 rounded-xl uppercase tracking-wider hover:bg-white transition-all mt-4">
+      Confirm Reservation
+     </button>
     </form>
    </div>
   </div>
 
-  <!-- JavaScript Functionality -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       lucide.createIcons();
 
-      // Restrict date input to today onwards
-      const dateInput = document.getElementById("appointmentDate");
-      const now = new Date();
-      const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().split("T")[0];
-      if (dateInput) dateInput.min = localToday;
-
-      // Modal Elements
+      // Modal Control
       const modal = document.getElementById("bookingModal");
-      const form = document.getElementById("bookingForm");
-      const success = document.getElementById("bookingSuccess");
-      let step = 1;
-
-      const renderStep = () => {
-        document.querySelectorAll(".step-panel").forEach(panel => {
-          panel.classList.toggle("is-active", Number(panel.dataset.step) === step);
-        });
-        document.querySelectorAll(".step-dot").forEach((dot, index) => {
-          if (index + 1 === step) {
-            dot.classList.add("is-current", "border-[#132A2F]", "text-[#132A2F]");
-            dot.classList.remove("text-gray-500", "border-[#E2DACD]");
-          } else {
-            dot.classList.remove("is-current", "border-[#132A2F]");
-            dot.classList.add("border-[#E2DACD]", "text-gray-500");
-          }
-        });
-      };
-
-      const openModal = () => {
-        modal.classList.add("is-open");
-        form.reset();
-        if (dateInput) dateInput.min = localToday;
-        success.classList.add("hidden");
-        form.classList.remove("hidden");
-        step = 1;
-        renderStep();
-      };
-
-      const closeModal = () => modal.classList.remove("is-open");
-
-      document.querySelectorAll("[data-booking-open]").forEach(button => button.addEventListener("click", openModal));
-      document.getElementById("bookingClose")?.addEventListener("click", closeModal);
-      document.getElementById("successClose")?.addEventListener("click", closeModal);
-
-      modal.addEventListener("click", event => {
-        if (event.target === modal) closeModal();
+      document.querySelectorAll("[data-modal-open]").forEach(btn => {
+        btn.addEventListener("click", () => modal.classList.add("is-open"));
       });
-
-      document.querySelectorAll("[data-next]").forEach(button => {
-        button.addEventListener("click", () => {
-          const activePanel = document.querySelector(`.step-panel[data-step="${step}"]`);
-          const fields = activePanel.querySelectorAll("input, select");
-          const valid = [...fields].every(field => field.checkValidity());
-
-          if (!valid) {
-            [...fields].find(field => !field.checkValidity())?.reportValidity();
-            return;
-          }
-
-          if (step < 3) {
-            step += 1;
-            renderStep();
-          }
-        });
-      });
-
-      document.querySelectorAll("[data-back]").forEach(button => {
-        button.addEventListener("click", () => {
-          if (step > 1) {
-            step -= 1;
-            renderStep();
-          }
-        });
-      });
-
-      form.addEventListener("submit", event => {
-        event.preventDefault();
-        form.classList.add("hidden");
-        success.classList.remove("hidden");
+      document.getElementById("modalClose")?.addEventListener("click", () => {
+        modal.classList.remove("is-open");
       });
     });
+
+    // Interactive Tab Content Data
+    const tabData = [
+      {
+        title: "Comprehensive Metabolic & Endocrine Profile",
+        desc: "Advanced analysis covering thyroid hormones, lipid fractions, glycated hemoglobin, and liver enzyme pathways using mass spectrometry.",
+        sample: "Venous Blood (5 ml)",
+        time: "Same-Day Digital Delivery",
+        fasting: "8 Hours"
+      },
+      {
+        title: "High-Throughput DNA & RNA Genomic Sequencing",
+        desc: "Next-Generation Sequencing (NGS) targeted at identifying genetic markers, hereditary predispositions, and pharmacological compatibility.",
+        sample: "Saliva / Blood Swab",
+        time: "48 Hours Delivery",
+        fasting: "None Required"
+      },
+      {
+        title: "Comprehensive Allergy & Autoimmune Panel",
+        desc: "Quantitative IgE antibody measurement for over 290 environmental, food, and synthetic allergens using microarray tech.",
+        sample: "Capillary / Venous Blood",
+        time: "24 Hours Delivery",
+        fasting: "4 Hours"
+      }
+    ];
+
+    function switchTab(index) {
+      const buttons = document.querySelectorAll("#tabButtons button");
+      buttons.forEach((btn, i) => {
+        if (i === index) {
+          btn.classList.add("active");
+          btn.classList.remove("bg-[#161D20]", "text-gray-300");
+        } else {
+          btn.classList.remove("active");
+          btn.classList.add("bg-[#161D20]", "text-gray-300");
+        }
+      });
+
+      const data = tabData[index];
+      const content = document.getElementById("tabContent");
+      content.innerHTML = `
+        <div class="flex items-center justify-between mb-6">
+         <span class="text-xs font-mono text-[#92BACE] border border-[#92BACE]/30 px-3 py-1 rounded-full">Automated Assay</span>
+         <span class="text-xs text-gray-400 font-mono">Fasting Required: ${data.fasting}</span>
+        </div>
+        <h3 class="font-italian text-3xl text-[#E6E1D7] font-semibold">${data.title}</h3>
+        <p class="text-gray-400 text-sm mt-3 leading-relaxed">${data.desc}</p>
+        
+        <div class="mt-8 grid sm:grid-cols-2 gap-4 border-t border-[#242E33] pt-6">
+         <div class="bg-[#0F1416] p-4 rounded-xl border border-[#242E33]">
+          <span class="text-xs text-gray-500 block">Sample Type</span>
+          <span class="text-sm font-bold text-[#E6E1D7] mt-1 block">${data.sample}</span>
+         </div>
+         <div class="bg-[#0F1416] p-4 rounded-xl border border-[#242E33]">
+          <span class="text-xs text-gray-500 block">Turnaround Time</span>
+          <span class="text-sm font-bold text-[#92BACE] mt-1 block">${data.time}</span>
+         </div>
+        </div>
+
+        <button data-modal-open onclick="document.getElementById('bookingModal').classList.add('is-open')" class="mt-8 w-full bg-[#92BACE] text-[#0F1416] font-bold py-4 rounded-xl text-xs uppercase tracking-wider hover:bg-white transition-colors">
+         Select This Panel
+        </button>
+      `;
+    }
   </script>
  </body>
 </html>
